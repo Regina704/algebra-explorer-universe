@@ -1,7 +1,6 @@
-
 import { useState } from 'react';
 import { Link } from 'react-router-dom';
-import { ArrowLeft, Users, CheckCircle, XCircle, RotateCcw } from 'lucide-react';
+import { ArrowLeft, Users, CheckCircle, XCircle, RotateCcw, Brain } from 'lucide-react';
 
 interface Question {
   id: number;
