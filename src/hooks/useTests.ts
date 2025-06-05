@@ -26,7 +26,15 @@ export function useTests() {
         .eq('is_published', true);
 
       if (error) throw error;
-      return data as Test[];
+      
+      // Преобразуем данные из базы в нужный формат
+      return data.map(test => ({
+        id: test.id,
+        title: test.title,
+        description: test.description,
+        questions: test.questions as TestQuestion[],
+        time_limit: test.time_limit
+      })) as Test[];
     }
   });
 }
