@@ -92,12 +92,12 @@ const Theory = () => {
                         <div>
                           <h4 className="font-semibold text-gray-700 mb-2">1. Перечисление элементов</h4>
                           <p className="text-gray-600 mb-2">Множество задается списком всех его элементов:</p>
-                          <code className="bg-gray-100 px-3 py-2 rounded block">A = {1, 2, 3, 4, 5}</code>
+                          <code className="bg-gray-100 px-3 py-2 rounded block">A = {'{1, 2, 3, 4, 5}'}</code>
                         </div>
                         <div>
                           <h4 className="font-semibold text-gray-700 mb-2">2. Описание характеристического свойства</h4>
                           <p className="text-gray-600 mb-2">Множество задается правилом или условием:</p>
-                          <code className="bg-gray-100 px-3 py-2 rounded block">B = {x | x — четное натуральное число, x ≤ 10}</code>
+                          <code className="bg-gray-100 px-3 py-2 rounded block">B = {'{x | x — четное натуральное число, x ≤ 10}'}</code>
                         </div>
                       </div>
                     </div>
@@ -175,7 +175,7 @@ const Theory = () => {
                     <div className="bg-gradient-to-r from-blue-50 to-indigo-50 p-6 rounded-lg">
                       <h3 className="text-xl font-semibold text-gray-800 mb-4">Пример 1: Множество цифр</h3>
                       <p className="text-gray-600 mb-3">Рассмотрим множество однозначных цифр:</p>
-                      <code className="bg-white px-4 py-2 rounded block text-lg mb-4">A = {0, 1, 2, 3, 4, 5, 6, 7, 8, 9}</code>
+                      <code className="bg-white px-4 py-2 rounded block text-lg mb-4">A = {'{0, 1, 2, 3, 4, 5, 6, 7, 8, 9}'}</code>
                       <ul className="text-gray-600 space-y-1">
                         <li>• 5 ∈ A (5 принадлежит множеству A)</li>
                         <li>• 12 ∉ A (12 не принадлежит множеству A)</li>
@@ -186,20 +186,20 @@ const Theory = () => {
                     <div className="bg-gradient-to-r from-green-50 to-emerald-50 p-6 rounded-lg">
                       <h3 className="text-xl font-semibold text-gray-800 mb-4">Пример 2: Множество по правилу</h3>
                       <p className="text-gray-600 mb-3">Множество четных чисел от 2 до 10:</p>
-                      <code className="bg-white px-4 py-2 rounded block text-lg mb-4">B = {x | x четное, 2 ≤ x ≤ 10}</code>
+                      <code className="bg-white px-4 py-2 rounded block text-lg mb-4">B = {'{x | x четное, 2 ≤ x ≤ 10}'}</code>
                       <p className="text-gray-600 mb-3">Перечислением это можно записать как:</p>
-                      <code className="bg-white px-4 py-2 rounded block text-lg mb-4">B = {2, 4, 6, 8, 10}</code>
+                      <code className="bg-white px-4 py-2 rounded block text-lg mb-4">B = {'{2, 4, 6, 8, 10}'}</code>
                     </div>
 
                     <div className="bg-gradient-to-r from-purple-50 to-pink-50 p-6 rounded-lg">
                       <h3 className="text-xl font-semibold text-gray-800 mb-4">Пример 3: Подмножества</h3>
-                      <p className="text-gray-600 mb-3">Пусть C = {a, b, c}. Тогда его подмножества:</p>
+                      <p className="text-gray-600 mb-3">Пусть C = {'{a, b, c}'}. Тогда его подмножества:</p>
                       <div className="bg-white p-4 rounded-lg">
                         <ul className="text-gray-600 space-y-1">
                           <li>• ∅ (пустое множество)</li>
-                          <li>• {a}, {b}, {c}</li>
-                          <li>• {a, b}, {a, c}, {b, c}</li>
-                          <li>• {a, b, c} (само множество)</li>
+                          <li>• {'{a}'}, {'{b}'}, {'{c}'}</li>
+                          <li>• {'{a, b}'}, {'{a, c}'}, {'{b, c}'}</li>
+                          <li>• {'{a, b, c}'} (само множество)</li>
                         </ul>
                       </div>
                       <p className="text-gray-600 mt-3 text-sm">
