@@ -1,28 +1,12 @@
 
 import { Link } from 'react-router-dom';
-import { Book, Brain, History, Settings, Calculator, Users } from 'lucide-react';
+import { Book, Brain, History, Calculator, Users } from 'lucide-react';
+import { Header } from '@/components/Header';
 
 const Index = () => {
   return (
     <div className="min-h-screen bg-gradient-to-br from-blue-50 via-indigo-50 to-purple-50">
-      {/* Header */}
-      <header className="bg-white shadow-lg">
-        <div className="container mx-auto px-4 py-6">
-          <div className="flex items-center justify-between">
-            <div className="flex items-center space-x-3">
-              <Calculator className="w-8 h-8 text-indigo-600" />
-              <h1 className="text-2xl font-bold text-gray-800">АлгебраТеория</h1>
-            </div>
-            <nav className="hidden md:flex space-x-6">
-              <Link to="/theory" className="text-gray-600 hover:text-indigo-600 transition-colors">Теория</Link>
-              <Link to="/problems" className="text-gray-600 hover:text-indigo-600 transition-colors">Задачи</Link>
-              <Link to="/tests" className="text-gray-600 hover:text-indigo-600 transition-colors">Тесты</Link>
-              <Link to="/history" className="text-gray-600 hover:text-indigo-600 transition-colors">История</Link>
-              <Link to="/admin" className="text-gray-600 hover:text-indigo-600 transition-colors">Админ</Link>
-            </nav>
-          </div>
-        </div>
-      </header>
+      <Header />
 
       {/* Hero Section */}
       <section className="py-20 px-4">

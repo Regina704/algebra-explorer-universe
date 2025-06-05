@@ -9,16 +9,182 @@ export type Json =
 export type Database = {
   public: {
     Tables: {
-      [_ in never]: never
+      problems: {
+        Row: {
+          created_at: string
+          difficulty: string
+          id: string
+          is_published: boolean
+          order_index: number
+          problem_text: string
+          solution: Json
+          title: string
+          updated_at: string
+        }
+        Insert: {
+          created_at?: string
+          difficulty: string
+          id?: string
+          is_published?: boolean
+          order_index?: number
+          problem_text: string
+          solution: Json
+          title: string
+          updated_at?: string
+        }
+        Update: {
+          created_at?: string
+          difficulty?: string
+          id?: string
+          is_published?: boolean
+          order_index?: number
+          problem_text?: string
+          solution?: Json
+          title?: string
+          updated_at?: string
+        }
+        Relationships: []
+      }
+      profiles: {
+        Row: {
+          created_at: string
+          email: string
+          full_name: string | null
+          id: string
+          role: Database["public"]["Enums"]["user_role"]
+          updated_at: string
+        }
+        Insert: {
+          created_at?: string
+          email: string
+          full_name?: string | null
+          id: string
+          role?: Database["public"]["Enums"]["user_role"]
+          updated_at?: string
+        }
+        Update: {
+          created_at?: string
+          email?: string
+          full_name?: string | null
+          id?: string
+          role?: Database["public"]["Enums"]["user_role"]
+          updated_at?: string
+        }
+        Relationships: []
+      }
+      test_results: {
+        Row: {
+          answers: Json
+          completed_at: string
+          id: string
+          score: number
+          test_id: string
+          total_questions: number
+          user_id: string
+        }
+        Insert: {
+          answers: Json
+          completed_at?: string
+          id?: string
+          score: number
+          test_id: string
+          total_questions: number
+          user_id: string
+        }
+        Update: {
+          answers?: Json
+          completed_at?: string
+          id?: string
+          score?: number
+          test_id?: string
+          total_questions?: number
+          user_id?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "test_results_test_id_fkey"
+            columns: ["test_id"]
+            isOneToOne: false
+            referencedRelation: "tests"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      tests: {
+        Row: {
+          created_at: string
+          description: string | null
+          id: string
+          is_published: boolean
+          questions: Json
+          time_limit: number | null
+          title: string
+          updated_at: string
+        }
+        Insert: {
+          created_at?: string
+          description?: string | null
+          id?: string
+          is_published?: boolean
+          questions: Json
+          time_limit?: number | null
+          title: string
+          updated_at?: string
+        }
+        Update: {
+          created_at?: string
+          description?: string | null
+          id?: string
+          is_published?: boolean
+          questions?: Json
+          time_limit?: number | null
+          title?: string
+          updated_at?: string
+        }
+        Relationships: []
+      }
+      theory_sections: {
+        Row: {
+          content: string
+          created_at: string
+          id: string
+          is_published: boolean
+          order_index: number
+          title: string
+          updated_at: string
+        }
+        Insert: {
+          content: string
+          created_at?: string
+          id?: string
+          is_published?: boolean
+          order_index?: number
+          title: string
+          updated_at?: string
+        }
+        Update: {
+          content?: string
+          created_at?: string
+          id?: string
+          is_published?: boolean
+          order_index?: number
+          title?: string
+          updated_at?: string
+        }
+        Relationships: []
+      }
     }
     Views: {
       [_ in never]: never
     }
     Functions: {
-      [_ in never]: never
+      get_user_role: {
+        Args: Record<PropertyKey, never>
+        Returns: Database["public"]["Enums"]["user_role"]
+      }
     }
     Enums: {
-      [_ in never]: never
+      user_role: "admin" | "user"
     }
     CompositeTypes: {
       [_ in never]: never
@@ -133,6 +299,8 @@ export type CompositeTypes<
 
 export const Constants = {
   public: {
-    Enums: {},
+    Enums: {
+      user_role: ["admin", "user"],
+    },
   },
 } as const
