@@ -18,7 +18,13 @@ export function useCreateTest() {
     mutationFn: async (testData: CreateTestData) => {
       const { data, error } = await supabase
         .from('tests')
-        .insert([testData])
+        .insert([{
+          title: testData.title,
+          description: testData.description,
+          questions: testData.questions as any,
+          time_limit: testData.time_limit,
+          is_published: testData.is_published
+        }])
         .select()
         .single();
 
@@ -36,9 +42,17 @@ export function useUpdateTest() {
   
   return useMutation({
     mutationFn: async ({ id, ...updates }: Partial<CreateTestData> & { id: string }) => {
+      const updateData: any = {};
+      
+      if (updates.title !== undefined) updateData.title = updates.title;
+      if (updates.description !== undefined) updateData.description = updates.description;
+      if (updates.questions !== undefined) updateData.questions = updates.questions as any;
+      if (updates.time_limit !== undefined) updateData.time_limit = updates.time_limit;
+      if (updates.is_published !== undefined) updateData.is_published = updates.is_published;
+
       const { data, error } = await supabase
         .from('tests')
-        .update(updates)
+        .update(updateData)
         .eq('id', id)
         .select()
         .single();
