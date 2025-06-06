@@ -3,7 +3,8 @@ import { useState } from 'react';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Textarea } from '@/components/ui/textarea';
-import { useCreateTest } from '@/hooks/useTestsAdmin';
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
+import { useCreateTest, TestType } from '@/hooks/useTestsAdmin';
 import { useToast } from '@/components/ui/use-toast';
 import { TestQuestion } from '@/hooks/useTests';
 import { Plus, Trash2 } from 'lucide-react';
@@ -12,6 +13,7 @@ export function TestForm() {
   const [title, setTitle] = useState('');
   const [description, setDescription] = useState('');
   const [timeLimit, setTimeLimit] = useState<number | null>(null);
+  const [testType, setTestType] = useState<TestType>('theory');
   const [questions, setQuestions] = useState<TestQuestion[]>([
     { question: '', options: ['', '', '', ''], correct: 0 }
   ]);
@@ -72,7 +74,8 @@ export function TestForm() {
         description: description || null,
         questions,
         time_limit: timeLimit,
-        is_published: true
+        is_published: true,
+        test_type: testType
       });
 
       toast({
@@ -84,6 +87,7 @@ export function TestForm() {
       setTitle('');
       setDescription('');
       setTimeLimit(null);
+      setTestType('theory');
       setQuestions([{ question: '', options: ['', '', '', ''], correct: 0 }]);
     } catch (error) {
       toast({
@@ -99,7 +103,7 @@ export function TestForm() {
       <h3 className="text-xl font-semibold mb-4">Создать новый тест</h3>
       
       <form onSubmit={handleSubmit} className="space-y-6">
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+        <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
           <div>
             <label className="block text-sm font-medium mb-2">Название теста *</label>
             <Input
@@ -111,12 +115,25 @@ export function TestForm() {
           </div>
 
           <div>
+            <label className="block text-sm font-medium mb-2">Тип теста *</label>
+            <Select value={testType} onValueChange={(value: TestType) => setTestType(value)}>
+              <SelectTrigger>
+                <SelectValue />
+              </SelectTrigger>
+              <SelectContent>
+                <SelectItem value="theory">Теория</SelectItem>
+                <SelectItem value="practice">Практика</SelectItem>
+              </SelectContent>
+            </Select>
+          </div>
+
+          <div>
             <label className="block text-sm font-medium mb-2">Ограничение по времени (минуты)</label>
             <Input
               type="number"
               value={timeLimit || ''}
               onChange={(e) => setTimeLimit(e.target.value ? parseInt(e.target.value) : null)}
-              placeholder="Оставьте пустым для неограниченного времени"
+              placeholder="Без ограничений"
               min="1"
             />
           </div>

@@ -3,12 +3,15 @@ import { useMutation, useQueryClient } from '@tanstack/react-query';
 import { supabase } from '@/integrations/supabase/client';
 import { TestQuestion } from './useTests';
 
+export type TestType = 'theory' | 'practice';
+
 export interface CreateTestData {
   title: string;
   description: string | null;
   questions: TestQuestion[];
   time_limit: number | null;
   is_published: boolean;
+  test_type: TestType;
 }
 
 export function useCreateTest() {
@@ -23,7 +26,8 @@ export function useCreateTest() {
           description: testData.description,
           questions: testData.questions as any,
           time_limit: testData.time_limit,
-          is_published: testData.is_published
+          is_published: testData.is_published,
+          test_type: testData.test_type
         }])
         .select()
         .single();
@@ -49,6 +53,7 @@ export function useUpdateTest() {
       if (updates.questions !== undefined) updateData.questions = updates.questions as any;
       if (updates.time_limit !== undefined) updateData.time_limit = updates.time_limit;
       if (updates.is_published !== undefined) updateData.is_published = updates.is_published;
+      if (updates.test_type !== undefined) updateData.test_type = updates.test_type;
 
       const { data, error } = await supabase
         .from('tests')

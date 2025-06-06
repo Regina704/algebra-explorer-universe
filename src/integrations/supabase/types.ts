@@ -117,6 +117,7 @@ export type Database = {
           id: string
           is_published: boolean
           questions: Json
+          test_type: Database["public"]["Enums"]["test_type"]
           time_limit: number | null
           title: string
           updated_at: string
@@ -127,6 +128,7 @@ export type Database = {
           id?: string
           is_published?: boolean
           questions: Json
+          test_type?: Database["public"]["Enums"]["test_type"]
           time_limit?: number | null
           title: string
           updated_at?: string
@@ -137,6 +139,7 @@ export type Database = {
           id?: string
           is_published?: boolean
           questions?: Json
+          test_type?: Database["public"]["Enums"]["test_type"]
           time_limit?: number | null
           title?: string
           updated_at?: string
@@ -148,6 +151,7 @@ export type Database = {
           content: string
           created_at: string
           id: string
+          image_url: string | null
           is_published: boolean
           order_index: number
           section_type: Database["public"]["Enums"]["theory_type"]
@@ -158,6 +162,7 @@ export type Database = {
           content: string
           created_at?: string
           id?: string
+          image_url?: string | null
           is_published?: boolean
           order_index?: number
           section_type?: Database["public"]["Enums"]["theory_type"]
@@ -168,6 +173,7 @@ export type Database = {
           content?: string
           created_at?: string
           id?: string
+          image_url?: string | null
           is_published?: boolean
           order_index?: number
           section_type?: Database["public"]["Enums"]["theory_type"]
@@ -187,6 +193,7 @@ export type Database = {
       }
     }
     Enums: {
+      test_type: "theory" | "practice"
       theory_type: "definition" | "notation" | "example"
       user_role: "admin" | "user"
     }
@@ -304,6 +311,7 @@ export type CompositeTypes<
 export const Constants = {
   public: {
     Enums: {
+      test_type: ["theory", "practice"],
       theory_type: ["definition", "notation", "example"],
       user_role: ["admin", "user"],
     },

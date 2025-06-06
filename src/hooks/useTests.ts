@@ -14,6 +14,7 @@ export interface Test {
   description: string | null;
   questions: TestQuestion[];
   time_limit: number | null;
+  test_type: 'theory' | 'practice';
 }
 
 export function useTests() {
@@ -23,7 +24,8 @@ export function useTests() {
       const { data, error } = await supabase
         .from('tests')
         .select('*')
-        .eq('is_published', true);
+        .eq('is_published', true)
+        .order('title', { ascending: true });
 
       if (error) throw error;
       
@@ -33,7 +35,8 @@ export function useTests() {
         title: test.title,
         description: test.description,
         questions: (test.questions as unknown) as TestQuestion[],
-        time_limit: test.time_limit
+        time_limit: test.time_limit,
+        test_type: test.test_type
       })) as Test[];
     }
   });

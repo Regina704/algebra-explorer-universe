@@ -11,6 +11,7 @@ export interface TheorySection {
   section_type: TheoryType;
   order_index: number;
   is_published: boolean;
+  image_url: string | null;
   created_at: string;
   updated_at: string;
 }
@@ -23,7 +24,7 @@ export function useTheory() {
         .from('theory_sections')
         .select('*')
         .eq('is_published', true)
-        .order('order_index', { ascending: true });
+        .order('title', { ascending: true });
 
       if (error) throw error;
       return data as TheorySection[];
