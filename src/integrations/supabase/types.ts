@@ -150,6 +150,7 @@ export type Database = {
           id: string
           is_published: boolean
           order_index: number
+          section_type: Database["public"]["Enums"]["theory_type"]
           title: string
           updated_at: string
         }
@@ -159,6 +160,7 @@ export type Database = {
           id?: string
           is_published?: boolean
           order_index?: number
+          section_type?: Database["public"]["Enums"]["theory_type"]
           title: string
           updated_at?: string
         }
@@ -168,6 +170,7 @@ export type Database = {
           id?: string
           is_published?: boolean
           order_index?: number
+          section_type?: Database["public"]["Enums"]["theory_type"]
           title?: string
           updated_at?: string
         }
@@ -184,6 +187,7 @@ export type Database = {
       }
     }
     Enums: {
+      theory_type: "definition" | "notation" | "example"
       user_role: "admin" | "user"
     }
     CompositeTypes: {
@@ -300,6 +304,7 @@ export type CompositeTypes<
 export const Constants = {
   public: {
     Enums: {
+      theory_type: ["definition", "notation", "example"],
       user_role: ["admin", "user"],
     },
   },
