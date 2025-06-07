@@ -1,5 +1,5 @@
 
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useMemo } from 'react';
 import { useParams, useNavigate, Link } from 'react-router-dom';
 import { ArrowLeft, Clock, CheckCircle } from 'lucide-react';
 import { useTests } from '@/hooks/useTests';
@@ -13,6 +13,18 @@ const TakeTest = () => {
   const { data: tests = [] } = useTests();
   
   const test = tests.find(t => t.id === testId);
+  
+  // Перемешиваем вопросы только один раз при загрузке теста
+  const shuffledQuestions = useMemo(() => {
+    if (!test) return [];
+    const questions = [...test.questions];
+    for (let i = questions.length - 1; i > 0; i--) {
+      const j = Math.floor(Math.random() * (i + 1));
+      [questions[i], questions[j]] = [questions[j], questions[i]];
+    }
+    return questions;
+  }, [test]);
+
   const [currentQuestion, setCurrentQuestion] = useState(0);
   const [answers, setAnswers] = useState<Record<number, number>>({});
   const [timeLeft, setTimeLeft] = useState<number | null>(null);
@@ -56,7 +68,7 @@ const TakeTest = () => {
   };
 
   const handleNext = () => {
-    if (test && currentQuestion < test.questions.length - 1) {
+    if (shuffledQuestions && currentQuestion < shuffledQuestions.length - 1) {
       setCurrentQuestion(prev => prev + 1);
     }
   };
@@ -72,16 +84,16 @@ const TakeTest = () => {
   };
 
   const calculateScore = () => {
-    if (!test) return 0;
+    if (!shuffledQuestions) return 0;
     
     let correct = 0;
-    test.questions.forEach((question, index) => {
+    shuffledQuestions.forEach((question, index) => {
       if (answers[index] === question.correct) {
         correct++;
       }
     });
     
-    return Math.round((correct / test.questions.length) * 100);
+    return Math.round((correct / shuffledQuestions.length) * 100);
   };
 
   if (!test) {
@@ -122,8 +134,8 @@ const TakeTest = () => {
               <div className="text-4xl font-bold text-indigo-600 mb-2">{score}%</div>
               <div className="text-gray-600">
                 Правильных ответов: {Object.values(answers).filter((answer, index) => 
-                  answer === test.questions[index]?.correct
-                ).length} из {test.questions.length}
+                  answer === shuffledQuestions[index]?.correct
+                ).length} из {shuffledQuestions.length}
               </div>
             </div>
 
@@ -145,7 +157,7 @@ const TakeTest = () => {
     );
   }
 
-  const currentQ = test.questions[currentQuestion];
+  const currentQ = shuffledQuestions[currentQuestion];
 
   return (
     <div className="min-h-screen bg-gradient-to-br from-blue-50 via-indigo-50 to-purple-50">
@@ -173,12 +185,12 @@ const TakeTest = () => {
           <div className="mb-6">
             <div className="flex justify-between items-center mb-4">
               <span className="text-sm text-gray-500">
-                Вопрос {currentQuestion + 1} из {test.questions.length}
+                Вопрос {currentQuestion + 1} из {shuffledQuestions.length}
               </span>
               <div className="w-32 bg-gray-200 rounded-full h-2">
                 <div 
                   className="bg-indigo-600 h-2 rounded-full transition-all duration-300"
-                  style={{ width: `${((currentQuestion + 1) / test.questions.length) * 100}%` }}
+                  style={{ width: `${((currentQuestion + 1) / shuffledQuestions.length) * 100}%` }}
                 ></div>
               </div>
             </div>
@@ -188,14 +200,15 @@ const TakeTest = () => {
             <h3 className="text-xl font-semibold text-gray-800 mb-6">{currentQ.question}</h3>
             
             <RadioGroup 
-              value={answers[currentQuestion]?.toString()} 
+              key={currentQuestion}
+              value={answers[currentQuestion]?.toString() || ""} 
               onValueChange={(value) => handleAnswerChange(currentQuestion, parseInt(value))}
               className="space-y-4"
             >
               {currentQ.options.map((option, index) => (
                 <div key={index} className="flex items-center space-x-3 p-4 border rounded-lg hover:bg-gray-50 transition-colors">
-                  <RadioGroupItem value={index.toString()} id={`option-${index}`} />
-                  <Label htmlFor={`option-${index}`} className="flex-1 cursor-pointer">
+                  <RadioGroupItem value={index.toString()} id={`option-${currentQuestion}-${index}`} />
+                  <Label htmlFor={`option-${currentQuestion}-${index}`} className="flex-1 cursor-pointer">
                     {option}
                   </Label>
                 </div>
@@ -213,7 +226,7 @@ const TakeTest = () => {
             </Button>
             
             <div className="space-x-4">
-              {currentQuestion === test.questions.length - 1 ? (
+              {currentQuestion === shuffledQuestions.length - 1 ? (
                 <Button onClick={handleFinish}>
                   Завершить тест
                 </Button>
