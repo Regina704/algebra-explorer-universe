@@ -14,10 +14,8 @@ export type Database = {
           created_at: string
           difficulty: string
           id: string
-          is_published: boolean
-          order_index: number
           problem_text: string
-          solution: Json
+          solution: string[]
           title: string
           updated_at: string
         }
@@ -25,10 +23,8 @@ export type Database = {
           created_at?: string
           difficulty: string
           id?: string
-          is_published?: boolean
-          order_index?: number
           problem_text: string
-          solution: Json
+          solution?: string[]
           title: string
           updated_at?: string
         }
@@ -36,10 +32,8 @@ export type Database = {
           created_at?: string
           difficulty?: string
           id?: string
-          is_published?: boolean
-          order_index?: number
           problem_text?: string
-          solution?: Json
+          solution?: string[]
           title?: string
           updated_at?: string
         }

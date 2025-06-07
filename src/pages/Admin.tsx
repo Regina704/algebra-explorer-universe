@@ -1,4 +1,3 @@
-
 import { useState } from 'react';
 import { Link } from 'react-router-dom';
 import { ArrowLeft, Settings, User, LogOut, Plus, Edit, Trash2 } from 'lucide-react';
@@ -6,8 +5,11 @@ import { useAuth } from '@/hooks/useAuth';
 import { useTheory, useDeleteTheorySection } from '@/hooks/useTheory';
 import { useTests } from '@/hooks/useTests';
 import { useDeleteTest } from '@/hooks/useTestsAdmin';
+import { useProblems } from '@/hooks/useProblems';
+import { useDeleteProblem } from '@/hooks/useProblemsAdmin';
 import { TheoryForm } from '@/components/admin/TheoryForm';
 import { TestForm } from '@/components/admin/TestForm';
+import ProblemForm from '@/components/admin/ProblemForm';
 import { Button } from '@/components/ui/button';
 import { useToast } from '@/components/ui/use-toast';
 
@@ -16,8 +18,10 @@ const Admin = () => {
   const [activeSection, setActiveSection] = useState('overview');
   const { data: theoryData = [] } = useTheory();
   const { data: testsData = [] } = useTests();
+  const { data: problemsData = [] } = useProblems();
   const deleteTheorySection = useDeleteTheorySection();
   const deleteTest = useDeleteTest();
+  const deleteProblem = useDeleteProblem();
   const { toast } = useToast();
 
   // Если пользователь не админ, показываем сообщение об ошибке
@@ -71,6 +75,42 @@ const Admin = () => {
           variant: "destructive"
         });
       }
+    }
+  };
+
+  const handleDeleteProblem = async (id: string, title: string) => {
+    if (confirm(`Вы уверены, что хотите удалить задачу "${title}"?`)) {
+      try {
+        await deleteProblem.mutateAsync(id);
+        toast({
+          title: "Успех",
+          description: "Задача успешно удалена"
+        });
+      } catch (error) {
+        toast({
+          title: "Ошибка",
+          description: "Не удалось удалить задачу",
+          variant: "destructive"
+        });
+      }
+    }
+  };
+
+  const getDifficultyLabel = (difficulty: string) => {
+    switch (difficulty) {
+      case 'easy': return 'Легкая';
+      case 'medium': return 'Средняя';
+      case 'hard': return 'Сложная';
+      default: return difficulty;
+    }
+  };
+
+  const getDifficultyColor = (difficulty: string) => {
+    switch (difficulty) {
+      case 'easy': return 'bg-green-100 text-green-800';
+      case 'medium': return 'bg-yellow-100 text-yellow-800';
+      case 'hard': return 'bg-red-100 text-red-800';
+      default: return 'bg-gray-100 text-gray-800';
     }
   };
 
@@ -133,8 +173,10 @@ const Admin = () => {
                 {[
                   { id: 'overview', title: 'Обзор', icon: '📊' },
                   { id: 'theory', title: 'Теория', icon: '📖' },
+                  { id: 'problems', title: 'Задачи', icon: '🧮' },
                   { id: 'tests', title: 'Тесты', icon: '📝' },
                   { id: 'add-theory', title: 'Добавить теорию', icon: '➕' },
+                  { id: 'add-problem', title: 'Добавить задачу', icon: '🔢' },
                   { id: 'add-test', title: 'Добавить тест', icon: '✏️' },
                 ].map((section) => (
                   <button
@@ -169,7 +211,9 @@ const Admin = () => {
                       <div className="text-blue-800">Теоретических разделов</div>
                     </div>
                     <div className="bg-green-50 p-6 rounded-lg text-center">
-                      <div className="text-3xl font-bold text-green-600 mb-2">0</div>
+                      <div className="text-3xl font-bold text-green-600 mb-2">
+                        {problemsData.length}
+                      </div>
                       <div className="text-green-800">Задач</div>
                     </div>
                     <div className="bg-purple-50 p-6 rounded-lg text-center">
@@ -217,6 +261,40 @@ const Admin = () => {
               </div>
             )}
 
+            {activeSection === 'problems' && (
+              <div className="bg-white rounded-lg shadow-lg p-8">
+                <h2 className="text-3xl font-bold text-gray-800 mb-6">Управление задачами</h2>
+                
+                <div className="space-y-4">
+                  {problemsData.map(problem => (
+                    <div key={problem.id} className="border rounded-lg p-6">
+                      <div className="flex items-start justify-between mb-4">
+                        <div className="flex items-center space-x-3">
+                          <span className={`px-3 py-1 rounded-full text-xs font-semibold ${getDifficultyColor(problem.difficulty)}`}>
+                            {getDifficultyLabel(problem.difficulty)}
+                          </span>
+                          <h3 className="text-lg font-semibold text-gray-800">{problem.title}</h3>
+                        </div>
+                        <button
+                          onClick={() => handleDeleteProblem(problem.id, problem.title)}
+                          className="p-2 text-red-600 hover:bg-red-50 rounded-lg transition-colors"
+                        >
+                          <Trash2 className="w-4 h-4" />
+                        </button>
+                      </div>
+                      <p className="text-gray-600 mb-2">{problem.problem_text.slice(0, 150)}...</p>
+                      <p className="text-sm text-gray-500">
+                        Шагов решения: {problem.solution.length}
+                      </p>
+                    </div>
+                  ))}
+                  {problemsData.length === 0 && (
+                    <p className="text-center text-gray-500 py-8">Пока нет задач</p>
+                  )}
+                </div>
+              </div>
+            )}
+
             {activeSection === 'tests' && (
               <div className="bg-white rounded-lg shadow-lg p-8">
                 <h2 className="text-3xl font-bold text-gray-800 mb-6">Управление тестами</h2>
@@ -252,6 +330,8 @@ const Admin = () => {
             )}
 
             {activeSection === 'add-theory' && <TheoryForm />}
+
+            {activeSection === 'add-problem' && <ProblemForm />}
 
             {activeSection === 'add-test' && <TestForm />}
           </div>

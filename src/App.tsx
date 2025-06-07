@@ -10,6 +10,7 @@ import Index from "./pages/Index";
 import Theory from "./pages/Theory";
 import Problems from "./pages/Problems";
 import Tests from "./pages/Tests";
+import TakeTest from "./pages/TakeTest";
 import History from "./pages/History";
 import Admin from "./pages/Admin";
 import Auth from "./pages/Auth";
@@ -30,6 +31,7 @@ const App = () => (
             <Route path="/theory" element={<Theory />} />
             <Route path="/problems" element={<Problems />} />
             <Route path="/tests" element={<Tests />} />
+            <Route path="/test/:testId" element={<TakeTest />} />
             <Route path="/history" element={<History />} />
             <Route 
               path="/admin" 

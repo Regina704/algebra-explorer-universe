@@ -8,7 +8,6 @@ export interface Problem {
   problem_text: string;
   solution: string[];
   difficulty: 'easy' | 'medium' | 'hard';
-  order_index: number;
 }
 
 export function useProblems() {
@@ -18,8 +17,7 @@ export function useProblems() {
       const { data, error } = await supabase
         .from('problems')
         .select('*')
-        .eq('is_published', true)
-        .order('order_index', { ascending: true });
+        .order('title', { ascending: true });
 
       if (error) throw error;
       return data as Problem[];

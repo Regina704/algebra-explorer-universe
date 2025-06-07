@@ -119,10 +119,12 @@ const Tests = () => {
                     )}
                   </div>
                   
-                  <Button className="w-full" variant="outline">
-                    <Play className="w-4 h-4 mr-2" />
-                    Начать тест
-                  </Button>
+                  <Link to={`/test/${test.id}`}>
+                    <Button className="w-full" variant="outline">
+                      <Play className="w-4 h-4 mr-2" />
+                      Начать тест
+                    </Button>
+                  </Link>
                 </div>
               ))}
             </div>
