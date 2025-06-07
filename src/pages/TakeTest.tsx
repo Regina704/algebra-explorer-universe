@@ -1,4 +1,3 @@
-
 import { useState, useEffect, useMemo } from 'react';
 import { useParams, useNavigate, Link } from 'react-router-dom';
 import { ArrowLeft, Clock, CheckCircle } from 'lucide-react';
@@ -14,15 +13,41 @@ const TakeTest = () => {
   
   const test = tests.find(t => t.id === testId);
   
-  // Перемешиваем вопросы только один раз при загрузке теста
+  // Перемешиваем вопросы и варианты ответов только один раз при загрузке теста
   const shuffledQuestions = useMemo(() => {
     if (!test) return [];
+    
+    // Сначала перемешиваем вопросы
     const questions = [...test.questions];
     for (let i = questions.length - 1; i > 0; i--) {
       const j = Math.floor(Math.random() * (i + 1));
       [questions[i], questions[j]] = [questions[j], questions[i]];
     }
-    return questions;
+    
+    // Затем для каждого вопроса перемешиваем варианты ответов
+    return questions.map(question => {
+      const options = [...question.options];
+      const correctAnswer = question.correct;
+      
+      // Создаем массив индексов для перемешивания
+      const indices = options.map((_, index) => index);
+      
+      // Перемешиваем индексы
+      for (let i = indices.length - 1; i > 0; i--) {
+        const j = Math.floor(Math.random() * (i + 1));
+        [indices[i], indices[j]] = [indices[j], indices[i]];
+      }
+      
+      // Создаем новый массив вариантов и находим новый индекс правильного ответа
+      const shuffledOptions = indices.map(index => options[index]);
+      const newCorrectIndex = indices.findIndex(index => index === correctAnswer);
+      
+      return {
+        ...question,
+        options: shuffledOptions,
+        correct: newCorrectIndex
+      };
+    });
   }, [test]);
 
   const [currentQuestion, setCurrentQuestion] = useState(0);
