@@ -149,6 +149,17 @@ export function TheoryForm() {
     }
   };
 
+  const getImageHelpText = () => {
+    switch (formData.section_type) {
+      case 'definition':
+        return 'Изображение для иллюстрации определения (диаграммы, схемы)';
+      case 'notation':
+        return 'Изображение с математическими обозначениями';
+      case 'example':
+        return 'Изображение для наглядного примера (графики, диаграммы)';
+    }
+  };
+
   return (
     <div className="bg-white rounded-lg shadow-lg p-6">
       <h3 className="text-xl font-semibold mb-4">Добавить теоретический раздел</h3>
@@ -192,46 +203,46 @@ export function TheoryForm() {
           />
         </div>
 
-        {formData.section_type === 'notation' && (
-          <div>
-            <label className="block text-sm font-medium mb-2">Изображение (для обозначений)</label>
-            
-            {imagePreview ? (
-              <div className="relative">
-                <img 
-                  src={imagePreview} 
-                  alt="Preview" 
-                  className="max-w-xs h-auto rounded-lg border"
-                />
-                <button
-                  type="button"
-                  onClick={removeImage}
-                  className="absolute top-2 right-2 bg-red-500 text-white rounded-full p-1 hover:bg-red-600"
-                >
-                  <X className="w-4 h-4" />
-                </button>
-              </div>
-            ) : (
-              <div className="border-2 border-dashed border-gray-300 rounded-lg p-6 text-center">
-                <Upload className="w-8 h-8 text-gray-400 mx-auto mb-2" />
-                <input
-                  type="file"
-                  accept="image/*"
-                  onChange={handleImageSelect}
-                  className="hidden"
-                  id="image-upload"
-                />
-                <label
-                  htmlFor="image-upload"
-                  className="cursor-pointer text-indigo-600 hover:text-indigo-800"
-                >
-                  Выберите изображение
-                </label>
-                <p className="text-sm text-gray-500 mt-1">PNG, JPG, GIF до 5MB</p>
-              </div>
-            )}
-          </div>
-        )}
+        {/* Поле для изображений для всех типов */}
+        <div>
+          <label className="block text-sm font-medium mb-2">Изображение</label>
+          <p className="text-xs text-gray-500 mb-3">{getImageHelpText()}</p>
+          
+          {imagePreview ? (
+            <div className="relative">
+              <img 
+                src={imagePreview} 
+                alt="Preview" 
+                className="max-w-xs h-auto rounded-lg border"
+              />
+              <button
+                type="button"
+                onClick={removeImage}
+                className="absolute top-2 right-2 bg-red-500 text-white rounded-full p-1 hover:bg-red-600"
+              >
+                <X className="w-4 h-4" />
+              </button>
+            </div>
+          ) : (
+            <div className="border-2 border-dashed border-gray-300 rounded-lg p-6 text-center">
+              <Upload className="w-8 h-8 text-gray-400 mx-auto mb-2" />
+              <input
+                type="file"
+                accept="image/*"
+                onChange={handleImageSelect}
+                className="hidden"
+                id="image-upload"
+              />
+              <label
+                htmlFor="image-upload"
+                className="cursor-pointer text-indigo-600 hover:text-indigo-800"
+              >
+                Выберите изображение
+              </label>
+              <p className="text-sm text-gray-500 mt-1">PNG, JPG, GIF до 5MB</p>
+            </div>
+          )}
+        </div>
 
         <Button 
           type="submit" 
