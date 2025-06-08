@@ -9,11 +9,19 @@ export interface TheorySection {
   title: string;
   content: string;
   section_type: TheoryType;
+  section_type_id: string | null;
   order_index: number;
   is_published: boolean;
   image_url: string | null;
   created_at: string;
   updated_at: string;
+  theory_section_types?: {
+    id: string;
+    name: string;
+    label: string;
+    icon: string;
+    color_class: string;
+  };
 }
 
 export function useTheory() {
@@ -22,9 +30,18 @@ export function useTheory() {
     queryFn: async () => {
       const { data, error } = await supabase
         .from('theory_sections')
-        .select('*')
+        .select(`
+          *,
+          theory_section_types (
+            id,
+            name,
+            label,
+            icon,
+            color_class
+          )
+        `)
         .eq('is_published', true)
-        .order('title', { ascending: true });
+        .order('order_index', { ascending: true });
 
       if (error) throw error;
       return data as TheorySection[];

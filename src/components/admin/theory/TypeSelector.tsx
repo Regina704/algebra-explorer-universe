@@ -1,24 +1,40 @@
 
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
-import { TheoryType } from '@/hooks/useTheory';
+import { useTheorySectionTypes } from '@/hooks/useTheorySectionTypes';
 
 interface TypeSelectorProps {
-  value: TheoryType;
-  onChange: (value: TheoryType) => void;
+  value: string;
+  onChange: (value: string) => void;
 }
 
 export function TypeSelector({ value, onChange }: TypeSelectorProps) {
+  const { data: sectionTypes = [], isLoading } = useTheorySectionTypes();
+
+  if (isLoading) {
+    return (
+      <div>
+        <label className="block text-sm font-medium mb-2">Тип раздела *</label>
+        <div className="h-10 bg-gray-100 rounded-md animate-pulse"></div>
+      </div>
+    );
+  }
+
   return (
     <div>
       <label className="block text-sm font-medium mb-2">Тип раздела *</label>
       <Select value={value} onValueChange={onChange}>
         <SelectTrigger>
-          <SelectValue />
+          <SelectValue placeholder="Выберите тип раздела" />
         </SelectTrigger>
         <SelectContent>
-          <SelectItem value="definition">Определение</SelectItem>
-          <SelectItem value="notation">Обозначение</SelectItem>
-          <SelectItem value="example">Пример</SelectItem>
+          {sectionTypes.map((type) => (
+            <SelectItem key={type.id} value={type.id}>
+              <div className="flex items-center space-x-2">
+                <span>{type.icon}</span>
+                <span>{type.label}</span>
+              </div>
+            </SelectItem>
+          ))}
         </SelectContent>
       </Select>
     </div>

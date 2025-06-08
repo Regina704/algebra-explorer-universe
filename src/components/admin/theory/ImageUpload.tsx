@@ -1,23 +1,36 @@
 
 import { Upload, X } from 'lucide-react';
-import { TheoryType } from '@/hooks/useTheory';
+import { useTheorySectionTypes } from '@/hooks/useTheorySectionTypes';
 
 interface ImageUploadProps {
-  sectionType: TheoryType;
+  sectionTypeId: string;
   imagePreview: string | null;
   onImageSelect: (e: React.ChangeEvent<HTMLInputElement>) => void;
   onRemoveImage: () => void;
 }
 
-export function ImageUpload({ sectionType, imagePreview, onImageSelect, onRemoveImage }: ImageUploadProps) {
+export function ImageUpload({ sectionTypeId, imagePreview, onImageSelect, onRemoveImage }: ImageUploadProps) {
+  const { data: sectionTypes = [] } = useTheorySectionTypes();
+  const selectedType = sectionTypes.find(type => type.id === sectionTypeId);
+
   const getImageHelpText = () => {
-    switch (sectionType) {
+    if (!selectedType) return 'Изображение для раздела';
+    
+    switch (selectedType.name) {
       case 'definition':
         return 'Изображение для иллюстрации определения (диаграммы, схемы)';
       case 'notation':
         return 'Изображение с математическими обозначениями';
       case 'example':
         return 'Изображение для наглядного примера (графики, диаграммы)';
+      case 'theorem':
+        return 'Изображение для иллюстрации теоремы';
+      case 'axiom':
+        return 'Изображение для демонстрации аксиомы';
+      case 'property':
+        return 'Изображение для демонстрации свойства';
+      default:
+        return 'Изображение для раздела';
     }
   };
 

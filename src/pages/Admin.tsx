@@ -1,3 +1,4 @@
+
 import { useState } from 'react';
 import { Link } from 'react-router-dom';
 import { ArrowLeft, Settings, User, LogOut, Plus, Edit, Trash2 } from 'lucide-react';
@@ -8,6 +9,8 @@ import { useDeleteTest } from '@/hooks/useTestsAdmin';
 import { useProblems } from '@/hooks/useProblems';
 import { useDeleteProblem } from '@/hooks/useProblemsAdmin';
 import { TheoryForm } from '@/components/admin/TheoryForm';
+import { TheoryEditModal } from '@/components/admin/TheoryEditModal';
+import { SectionTypesManager } from '@/components/admin/SectionTypesManager';
 import { TestForm } from '@/components/admin/TestForm';
 import ProblemForm from '@/components/admin/ProblemForm';
 import { Button } from '@/components/ui/button';
@@ -16,6 +19,7 @@ import { useToast } from '@/components/ui/use-toast';
 const Admin = () => {
   const { user, profile, signOut, isAdmin } = useAuth();
   const [activeSection, setActiveSection] = useState('overview');
+  const [editingTheory, setEditingTheory] = useState(null);
   const { data: theoryData = [] } = useTheory();
   const { data: testsData = [] } = useTests();
   const { data: problemsData = [] } = useProblems();
@@ -114,24 +118,6 @@ const Admin = () => {
     }
   };
 
-  const getTypeLabel = (type: string) => {
-    switch (type) {
-      case 'definition': return 'Определение';
-      case 'notation': return 'Обозначение';
-      case 'example': return 'Пример';
-      default: return type;
-    }
-  };
-
-  const getTypeColor = (type: string) => {
-    switch (type) {
-      case 'definition': return 'bg-blue-100 text-blue-800';
-      case 'notation': return 'bg-green-100 text-green-800';
-      case 'example': return 'bg-purple-100 text-purple-800';
-      default: return 'bg-gray-100 text-gray-800';
-    }
-  };
-
   return (
     <div className="min-h-screen bg-gradient-to-br from-blue-50 via-indigo-50 to-purple-50">
       {/* Header */}
@@ -175,6 +161,7 @@ const Admin = () => {
                   { id: 'theory', title: 'Теория', icon: '📖' },
                   { id: 'problems', title: 'Задачи', icon: '🧮' },
                   { id: 'tests', title: 'Тесты', icon: '📝' },
+                  { id: 'section-types', title: 'Типы разделов', icon: '🏷️' },
                   { id: 'add-theory', title: 'Добавить теорию', icon: '➕' },
                   { id: 'add-problem', title: 'Добавить задачу', icon: '🔢' },
                   { id: 'add-test', title: 'Добавить тест', icon: '✏️' },
@@ -236,12 +223,19 @@ const Admin = () => {
                     <div key={item.id} className="border rounded-lg p-6">
                       <div className="flex items-start justify-between mb-4">
                         <div className="flex items-center space-x-3">
-                          <span className={`px-3 py-1 rounded-full text-xs font-semibold ${getTypeColor(item.section_type)}`}>
-                            {getTypeLabel(item.section_type)}
-                          </span>
-                          <h3 className="text-lg font-semibold text-gray-800">{item.title}</h3>
+                          <span className="text-2xl">{item.theory_section_types?.icon || '📖'}</span>
+                          <div>
+                            <h3 className="text-lg font-semibold text-gray-800">{item.title}</h3>
+                            <span className="text-sm text-gray-500">{item.theory_section_types?.label}</span>
+                          </div>
                         </div>
                         <div className="flex space-x-2">
+                          <button
+                            onClick={() => setEditingTheory(item)}
+                            className="p-2 text-blue-600 hover:bg-blue-50 rounded-lg transition-colors"
+                          >
+                            <Edit className="w-4 h-4" />
+                          </button>
                           <button
                             onClick={() => handleDeleteTheory(item.id, item.title)}
                             className="p-2 text-red-600 hover:bg-red-50 rounded-lg transition-colors"
@@ -275,12 +269,19 @@ const Admin = () => {
                           </span>
                           <h3 className="text-lg font-semibold text-gray-800">{problem.title}</h3>
                         </div>
-                        <button
-                          onClick={() => handleDeleteProblem(problem.id, problem.title)}
-                          className="p-2 text-red-600 hover:bg-red-50 rounded-lg transition-colors"
-                        >
-                          <Trash2 className="w-4 h-4" />
-                        </button>
+                        <div className="flex space-x-2">
+                          <button
+                            className="p-2 text-blue-600 hover:bg-blue-50 rounded-lg transition-colors"
+                          >
+                            <Edit className="w-4 h-4" />
+                          </button>
+                          <button
+                            onClick={() => handleDeleteProblem(problem.id, problem.title)}
+                            className="p-2 text-red-600 hover:bg-red-50 rounded-lg transition-colors"
+                          >
+                            <Trash2 className="w-4 h-4" />
+                          </button>
+                        </div>
                       </div>
                       <p className="text-gray-600 mb-2">{problem.problem_text.slice(0, 150)}...</p>
                       <p className="text-sm text-gray-500">
@@ -309,12 +310,19 @@ const Admin = () => {
                             <p className="text-gray-600 mt-1">{test.description}</p>
                           )}
                         </div>
-                        <button
-                          onClick={() => handleDeleteTest(test.id, test.title)}
-                          className="p-2 text-red-600 hover:bg-red-50 rounded-lg transition-colors"
-                        >
-                          <Trash2 className="w-4 h-4" />
-                        </button>
+                        <div className="flex space-x-2">
+                          <button
+                            className="p-2 text-blue-600 hover:bg-blue-50 rounded-lg transition-colors"
+                          >
+                            <Edit className="w-4 h-4" />
+                          </button>
+                          <button
+                            onClick={() => handleDeleteTest(test.id, test.title)}
+                            className="p-2 text-red-600 hover:bg-red-50 rounded-lg transition-colors"
+                          >
+                            <Trash2 className="w-4 h-4" />
+                          </button>
+                        </div>
                       </div>
                       <div className="flex items-center space-x-4 text-sm text-gray-500">
                         <span>Вопросов: {test.questions.length}</span>
@@ -329,6 +337,8 @@ const Admin = () => {
               </div>
             )}
 
+            {activeSection === 'section-types' && <SectionTypesManager />}
+
             {activeSection === 'add-theory' && <TheoryForm />}
 
             {activeSection === 'add-problem' && <ProblemForm />}
@@ -337,6 +347,13 @@ const Admin = () => {
           </div>
         </div>
       </div>
+
+      {/* Модал редактирования теории */}
+      <TheoryEditModal
+        section={editingTheory}
+        isOpen={!!editingTheory}
+        onClose={() => setEditingTheory(null)}
+      />
     </div>
   );
 };

@@ -176,6 +176,39 @@ export type Database = {
         }
         Relationships: []
       }
+      theory_section_types: {
+        Row: {
+          color_class: string | null
+          created_at: string | null
+          description: string | null
+          icon: string | null
+          id: string
+          label: string
+          name: string
+          updated_at: string | null
+        }
+        Insert: {
+          color_class?: string | null
+          created_at?: string | null
+          description?: string | null
+          icon?: string | null
+          id?: string
+          label: string
+          name: string
+          updated_at?: string | null
+        }
+        Update: {
+          color_class?: string | null
+          created_at?: string | null
+          description?: string | null
+          icon?: string | null
+          id?: string
+          label?: string
+          name?: string
+          updated_at?: string | null
+        }
+        Relationships: []
+      }
       theory_sections: {
         Row: {
           content: string
@@ -185,6 +218,7 @@ export type Database = {
           is_published: boolean
           order_index: number
           section_type: Database["public"]["Enums"]["theory_type"]
+          section_type_id: string | null
           title: string
           updated_at: string
         }
@@ -196,6 +230,7 @@ export type Database = {
           is_published?: boolean
           order_index?: number
           section_type?: Database["public"]["Enums"]["theory_type"]
+          section_type_id?: string | null
           title: string
           updated_at?: string
         }
@@ -207,10 +242,19 @@ export type Database = {
           is_published?: boolean
           order_index?: number
           section_type?: Database["public"]["Enums"]["theory_type"]
+          section_type_id?: string | null
           title?: string
           updated_at?: string
         }
-        Relationships: []
+        Relationships: [
+          {
+            foreignKeyName: "theory_sections_section_type_id_fkey"
+            columns: ["section_type_id"]
+            isOneToOne: false
+            referencedRelation: "theory_section_types"
+            referencedColumns: ["id"]
+          },
+        ]
       }
     }
     Views: {

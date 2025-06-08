@@ -1,7 +1,8 @@
 
 import { useState } from 'react';
 import { Button } from '@/components/ui/button';
-import { useCreateTheorySection, TheoryType } from '@/hooks/useTheory';
+import { useCreateTheorySection } from '@/hooks/useTheory';
+import { useTheorySectionTypes } from '@/hooks/useTheorySectionTypes';
 import { useToast } from '@/components/ui/use-toast';
 import { supabase } from '@/integrations/supabase/client';
 import { TypeSelector } from './theory/TypeSelector';
@@ -11,15 +12,18 @@ import { ImageUpload } from './theory/ImageUpload';
 interface TheoryFormData {
   title: string;
   content: string;
-  section_type: TheoryType;
+  section_type_id: string;
+  order_index: number;
   image_url?: string;
 }
 
 export function TheoryForm() {
+  const { data: sectionTypes = [] } = useTheorySectionTypes();
   const [formData, setFormData] = useState<TheoryFormData>({
     title: '',
     content: '',
-    section_type: 'definition'
+    section_type_id: sectionTypes[0]?.id || '',
+    order_index: 0
   });
   const [imageFile, setImageFile] = useState<File | null>(null);
   const [imagePreview, setImagePreview] = useState<string | null>(null);
@@ -70,7 +74,7 @@ export function TheoryForm() {
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     
-    if (!formData.title.trim() || !formData.content.trim()) {
+    if (!formData.title.trim() || !formData.content.trim() || !formData.section_type_id) {
       toast({
         title: "Ошибка",
         description: "Заполните все обязательные поля",
@@ -100,8 +104,8 @@ export function TheoryForm() {
       await createTheorySection.mutateAsync({
         ...formData,
         image_url: imageUrl,
-        order_index: 0,
-        is_published: true
+        is_published: true,
+        section_type: 'definition' // Совместимость со старой схемой
       });
 
       toast({
@@ -113,7 +117,8 @@ export function TheoryForm() {
       setFormData({
         title: '',
         content: '',
-        section_type: 'definition'
+        section_type_id: sectionTypes[0]?.id || '',
+        order_index: 0
       });
       setImageFile(null);
       setImagePreview(null);
@@ -134,20 +139,22 @@ export function TheoryForm() {
       
       <form onSubmit={handleSubmit} className="space-y-4">
         <TypeSelector 
-          value={formData.section_type}
-          onChange={(value: TheoryType) => setFormData({...formData, section_type: value})}
+          value={formData.section_type_id}
+          onChange={(value: string) => setFormData({...formData, section_type_id: value})}
         />
 
         <FormFields
           title={formData.title}
           content={formData.content}
-          sectionType={formData.section_type}
+          sectionTypeId={formData.section_type_id}
+          orderIndex={formData.order_index}
           onTitleChange={(value) => setFormData({...formData, title: value})}
           onContentChange={(value) => setFormData({...formData, content: value})}
+          onOrderIndexChange={(value) => setFormData({...formData, order_index: value})}
         />
 
         <ImageUpload
-          sectionType={formData.section_type}
+          sectionTypeId={formData.section_type_id}
           imagePreview={imagePreview}
           onImageSelect={handleImageSelect}
           onRemoveImage={removeImage}
