@@ -1,4 +1,3 @@
-
 import { useState } from 'react';
 import { Link } from 'react-router-dom';
 import { ArrowLeft, Settings, User, LogOut, Plus, Edit, Trash2 } from 'lucide-react';
@@ -10,6 +9,7 @@ import { useProblems } from '@/hooks/useProblems';
 import { useDeleteProblem } from '@/hooks/useProblemsAdmin';
 import { TheoryForm } from '@/components/admin/TheoryForm';
 import { TheoryEditModal } from '@/components/admin/TheoryEditModal';
+import { ProblemEditModal } from '@/components/admin/ProblemEditModal';
 import { SectionTypesManager } from '@/components/admin/SectionTypesManager';
 import { TestForm } from '@/components/admin/TestForm';
 import ProblemForm from '@/components/admin/ProblemForm';
@@ -20,6 +20,7 @@ const Admin = () => {
   const { user, profile, signOut, isAdmin } = useAuth();
   const [activeSection, setActiveSection] = useState('overview');
   const [editingTheory, setEditingTheory] = useState(null);
+  const [editingProblem, setEditingProblem] = useState(null);
   const { data: theoryData = [] } = useTheory();
   const { data: testsData = [] } = useTests();
   const { data: problemsData = [] } = useProblems();
@@ -271,6 +272,7 @@ const Admin = () => {
                         </div>
                         <div className="flex space-x-2">
                           <button
+                            onClick={() => setEditingProblem(problem)}
                             className="p-2 text-blue-600 hover:bg-blue-50 rounded-lg transition-colors"
                           >
                             <Edit className="w-4 h-4" />
@@ -348,11 +350,17 @@ const Admin = () => {
         </div>
       </div>
 
-      {/* Модал редактирования теории */}
+      {/* Модальные окна */}
       <TheoryEditModal
         section={editingTheory}
         isOpen={!!editingTheory}
         onClose={() => setEditingTheory(null)}
+      />
+
+      <ProblemEditModal
+        problem={editingProblem}
+        isOpen={!!editingProblem}
+        onClose={() => setEditingProblem(null)}
       />
     </div>
   );
