@@ -7,7 +7,7 @@ import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@
 import { useCreateTest, TestType } from '@/hooks/useTestsAdmin';
 import { useToast } from '@/components/ui/use-toast';
 import { TestQuestion } from '@/hooks/useTests';
-import { Plus, Trash2 } from 'lucide-react';
+import { Plus, Trash2, BookOpen } from 'lucide-react';
 
 export function TestForm() {
   const [title, setTitle] = useState('');
@@ -41,6 +41,120 @@ export function TestForm() {
     const updated = [...questions];
     updated[questionIndex].options[optionIndex] = value;
     setQuestions(updated);
+  };
+
+  const loadSetsTemplate = () => {
+    setTitle('Тест: Множество. Элемент множества');
+    setDescription('Базовый тест на знание теоретических основ теории множеств');
+    setTimeLimit(15);
+    setTestType('theory');
+    setQuestions([
+      {
+        question: 'Что такое множество?',
+        options: [
+          'Совокупность различных объектов, рассматриваемых как единое целое',
+          'Упорядоченная последовательность элементов',
+          'Группа одинаковых объектов',
+          'Числовая последовательность'
+        ],
+        correct: 0
+      },
+      {
+        question: 'Как обозначается принадлежность элемента множеству?',
+        options: [
+          'a ⊂ A',
+          'a ∈ A',
+          'a ∪ A',
+          'a ∩ A'
+        ],
+        correct: 1
+      },
+      {
+        question: 'Что означает запись B ⊆ A?',
+        options: [
+          'B больше A',
+          'B не равно A',
+          'B является подмножеством A',
+          'B пересекается с A'
+        ],
+        correct: 2
+      },
+      {
+        question: 'Какое множество называется пустым?',
+        options: [
+          'Множество, содержащее один элемент',
+          'Множество, не содержащее ни одного элемента',
+          'Множество, содержащее бесконечно много элементов',
+          'Множество, содержащее только числа'
+        ],
+        correct: 1
+      },
+      {
+        question: 'Как обозначается пустое множество?',
+        options: [
+          '{}',
+          '∅',
+          'Оба варианта верны',
+          'Ø'
+        ],
+        correct: 2
+      },
+      {
+        question: 'Что такое мощность множества?',
+        options: [
+          'Сумма всех элементов множества',
+          'Количество элементов в множестве',
+          'Произведение всех элементов множества',
+          'Максимальный элемент множества'
+        ],
+        correct: 1
+      },
+      {
+        question: 'Какие множества называются равными?',
+        options: [
+          'Множества с одинаковой мощностью',
+          'Множества, состоящие из одних и тех же элементов',
+          'Множества, записанные одинаково',
+          'Множества с похожими элементами'
+        ],
+        correct: 1
+      },
+      {
+        question: 'Что такое универсальное множество?',
+        options: [
+          'Множество всех чисел',
+          'Самое большое множество',
+          'Множество, содержащее все рассматриваемые объекты',
+          'Множество всех букв'
+        ],
+        correct: 2
+      },
+      {
+        question: 'Может ли элемент множества сам быть множеством?',
+        options: [
+          'Да, может',
+          'Нет, не может',
+          'Только если это числовое множество',
+          'Только в особых случаях'
+        ],
+        correct: 0
+      },
+      {
+        question: 'Что означает запись |A| = 5?',
+        options: [
+          'Множество A содержит элемент 5',
+          'Множество A состоит из 5 элементов',
+          'Множество A равно 5',
+          'Множество A больше 5'
+        ],
+        correct: 1
+      }
+    ]);
+
+    toast({
+      title: "Шаблон загружен",
+      description: "Загружен тест по теме 'Множество. Элемент множества'"
+    });
   };
 
   const handleSubmit = async (e: React.FormEvent) => {
@@ -100,7 +214,18 @@ export function TestForm() {
 
   return (
     <div className="bg-white rounded-lg shadow-lg p-6">
-      <h3 className="text-xl font-semibold mb-4">Создать новый тест</h3>
+      <div className="flex items-center justify-between mb-4">
+        <h3 className="text-xl font-semibold">Создать новый тест</h3>
+        <Button 
+          type="button" 
+          onClick={loadSetsTemplate}
+          variant="outline"
+          className="flex items-center space-x-2"
+        >
+          <BookOpen className="w-4 h-4" />
+          <span>Загрузить тест "Множества"</span>
+        </Button>
+      </div>
       
       <form onSubmit={handleSubmit} className="space-y-6">
         <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
